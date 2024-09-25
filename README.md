@@ -1,1 +1,1 @@
-# Dog Breed Recognition App
+# Image Recognition App
