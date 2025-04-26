@@ -8,7 +8,7 @@ function App() {
 
   const handleFileChange = (e) => {
     setFile(e.target.files[0]);
-    setBreed(''); // Nollataan aiemmat tiedot
+    setBreed('');
     setError('');
   };
 
