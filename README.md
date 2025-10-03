@@ -1,4 +1,4 @@
-# 🧠 Image Recognition App
+# Image Recognition App
 
 A small project exploring image-recognition techniques in Python.  
 Users can upload an image (or use a camera input), and the app runs basic preprocessing and a model/pipeline to recognize objects or classify the image.  
@@ -25,14 +25,14 @@ _Example view of preprocessed/augmented image before inference._
 - **ML / Vision:** (e.g., OpenCV, scikit-image, scikit-learn, TensorFlow or PyTorch)  
 - **Front-end:** HTML, CSS, JavaScript (basic demo UI)  
 
-## 🧪 How It Works
+## How It Works
 
 1. **Input** – User selects or captures an image.  
 2. **Preprocessing** – The image is resized/normalized and optionally filtered/augmented.  
 3. **Inference** – The model or algorithm produces predictions (class label or features).  
 4. **Display** – The app shows the result and any relevant scores.
 
-## 🚀 Installation & Setup
+## Installation & Setup
 
 > Use the Python setup first. If you also have a separate front-end, run it from the project root.
 
