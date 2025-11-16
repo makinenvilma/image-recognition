@@ -2,22 +2,32 @@ from flask import Flask, request, jsonify
 from PIL import Image
 from flask_cors import CORS
 import tensorflow as tf
+import numpy as np
 
 app = Flask(__name__)
 CORS(app)
 
-def recognize_breed(image):
-    breeds = ["Golden Retriever", "Dalmatian", "German Shepherd"]
-    return breeds[hash(image) % len(breeds)]
+model = tf.keras.models.load_model("dog_breed_model.keras")
+with open("class_names.txt", "r", encoding="utf-8") as f:
+    class_names = [line.strip() for line in f.readlines()]
 
-# Placeholder function for training a model
-def train_model():
-    # Example: Load dataset, define model, and train
-    # dataset = tf.keras.preprocessing.image_dataset_from_directory('path_to_dataset')
-    # model = tf.keras.Sequential([...])
-    # model.compile(optimizer='adam', loss='sparse_categorical_crossentropy', metrics=['accuracy'])
-    # model.fit(dataset, epochs=10)
-    pass
+IMG_SIZE = (224, 224)
+
+def recognize_breed(image):
+    image = image.convert("RGB")
+    image = image.resize(IMG_SIZE)
+
+    arr = np.array(image)
+    arr = np.expand_dims(arr, axis=0)
+
+    arr = tf.keras.applications.mobilenet_v2.preprocess_input(arr)
+
+    preds = model.predict(arr)
+    idx = np.argmax(preds[0])
+
+    raw_label = class_names[idx]
+    pretty_label = raw_label.replace("_", " ")
+    return pretty_label
 
 @app.route('/api/predict', methods=['POST'])
 def predict():
@@ -30,9 +40,8 @@ def predict():
         breed = recognize_breed(image)
         return jsonify({"breed": breed})
     except Exception as e:
+        print("Error in /api/predict:", e)
         return jsonify({"error": str(e)}), 500
 
 if __name__ == '__main__':
-    # Uncomment the line below to train the model before running the app
-    # train_model()
     app.run(debug=True)
