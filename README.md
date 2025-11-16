@@ -1,77 +1,107 @@
-# Image Recognition App
+# Dog Breed Recognition (Golden Retriever & Dalmatian)
 
-A small project exploring image-recognition techniques in Python.  
-Users can upload an image (or use a camera input), and the app runs basic preprocessing and a model/pipeline to recognize objects or classify the image.  
-Built end-to-end to practice ML workflows and web integration.
+A simple end-to-end machine learning project that classifies dog images as either **Golden Retriever** or **Dalmatian**.  
+The project includes:
+
+- A **TensorFlow training script** for your own dataset  
+- A **Flask API backend** for running predictions  
+- A **React frontend** for uploading images and showing results  
+
+---
 
 ## Features
 
-- **Image Upload / Camera Input** – Test recognition on your own images.  
-- **Preprocessing Pipeline** – Resize, normalize, and transform images before inference.  
-- **Prediction Output** – Displays predicted label(s) and basic confidence/score.  
-- **Simple UI** – Minimal interface for quick experiments and demos.
+- **Image Upload** – User can upload a dog image from the browser  
+- **Custom Dataset** – Uses your own images stored locally (`data/dogs/...`)  
+- **TensorFlow Model** – MobileNetV2-based classifier (transfer learning)  
+- **Flask API** – `/api/predict` endpoint for inference  
+- **React UI** – Simple interface to test predictions
 
-## Screenshots
+---
 
-**Sample Prediction**  
-_Example result view after submitting an image._
+## Project Structure
 
-**Preprocessing Preview**  
-_Example view of preprocessed/augmented image before inference._
+```
+image-recognition/
+│
+├── app.py                 # Flask backend for prediction
+├── train_model.py         # Script to train the TensorFlow model
+├── dog_breed_model.keras  # Saved model (generated after training)
+├── class_names.txt        # Saved class labels
+│
+├── data/
+│   └── dogs/
+│       ├── Dalmatian/
+│       └── Golden_Retriever/
+│
+├── src/                   # React frontend
+│   ├── App.js
+│   └── ...other React files
+│
+└── package.json
+```
 
-## Tech Stack
+---
 
-- **Back-end:** Python (web server, e.g., Flask/FastAPI)  
-- **ML / Vision:** (e.g., OpenCV, scikit-image, scikit-learn, TensorFlow or PyTorch)  
-- **Front-end:** HTML, CSS, JavaScript (basic demo UI)  
+## Training the Model
 
-## How It Works
+1. Place your images into:
 
-1. **Input** – User selects or captures an image.  
-2. **Preprocessing** – The image is resized/normalized and optionally filtered/augmented.  
-3. **Inference** – The model or algorithm produces predictions (class label or features).  
-4. **Display** – The app shows the result and any relevant scores.
+```
+data/dogs/Golden_Retriever/
+data/dogs/Dalmatian/
+```
 
-## Installation & Setup
+2. Run the training script:
 
-> Use the Python setup first. If you also have a separate front-end, run it from the project root.
+```bash
+python train_model.py
+```
 
-### 1) Back-end (Python)
+This generates:
 
-1. **Clone the repository**
-   ```bash
-   git clone https://github.com/makinenvilma/image-recognition.git
-   cd image-recognition
-   ```
+- `dog_breed_model.keras`  
+- `class_names.txt`
 
-2. **Create and activate a virtual environment**
-   ```bash
-   python -m venv venv
-   # macOS/Linux
-   source venv/bin/activate
-   # Windows (PowerShell)
-   venv\Scripts\Activate.ps1
-   ```
+---
 
-3. **Install dependencies**
-   ```bash
-   pip install -r requirements.txt
-   ```
+## Running the Backend (Flask)
 
-4. **Run the server**
-   ```bash
-   python app.py
-   ```
-   The app will be available at `http://localhost:5000` (or as defined in `app.py`).
+```bash
+python app.py
+```
 
-### 2) Front-end (optional)
+Runs at:
 
-1. **Install Node dependencies**
-   ```bash
-   npm install
-   ```
+```
+http://localhost:5000
+```
 
-2. **Start the dev server**
-   ```bash
-   npm run dev
-   ```
+---
+
+## Running the Frontend (React)
+
+```bash
+npm install
+npm start
+```
+
+Runs at:
+
+```
+http://localhost:3000
+```
+
+The frontend will send prediction requests to the backend's `/api/predict` endpoint.
+
+---
+
+## How Prediction Works
+
+1. User uploads an image  
+2. React sends it → `POST /api/predict`  
+3. Flask loads the TensorFlow model  
+4. Image is resized and preprocessed  
+5. Model returns either:
+   - **Golden Retriever**
+   - **Dalmatian**
