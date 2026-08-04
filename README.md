@@ -1,17 +1,16 @@
 # Dog Breed Recognition
 
-Upload a photo of a dog and get told whether it is a golden retriever or a dalmatian.
-Those are the only two answers it knows, which makes it less of a product and more of
-an excuse to build the whole chain from scratch: collect the pictures, train the
-model, wrap it in an API, put a page in front of it.
+Upload a photo of a dog and the app identifies it as a golden retriever or a
+dalmatian. Those are the only two classes it knows.
 
-It is a MobileNetV2 base with a new top layer trained on twelve photos. Twelve. It is
-right about the two breeds it has seen and confidently wrong about everything else.
+The project covers the whole chain: collecting the images, training the model,
+serving it through an API and uploading to it from a web page. The model is a
+MobileNetV2 base with a new top layer trained on twelve photos.
 
 ## Status
 
 All three pieces work and talk to each other. The trained model is committed, so you
-can run the thing without training anything yourself.
+can run it without training anything yourself.
 
 Working right now:
 
@@ -23,10 +22,10 @@ Working right now:
 Not done yet:
 
 - Twelve training images, six per breed, with a fifth of those held back for
-  validation. Enough to prove the pipeline runs, nowhere near enough to trust it.
-- Every image gets one of the two labels. Photograph a cat, a bicycle or an empty
-  wall and it will still name a breed, because nothing checks confidence.
-- The probability is calculated and then thrown away. Only the label comes back.
+  validation. Enough to show the pipeline works, not enough for reliable results.
+- Every image gets one of the two labels. Nothing checks the confidence score, so a
+  photo of something that is not a dog still returns a breed.
+- The probability is calculated and then discarded. Only the label is returned.
 - No `requirements.txt`, so the Python dependencies have to be installed by hand.
 - Flask runs with `debug=True`, and the API address is hardcoded in `src/App.js`.
 - `src/App.test.js` is still the one Create React App generated, looking for a "learn
@@ -40,12 +39,12 @@ opens the uploaded file. The front end is Create React App with React 18, one
 component, no router.
 
 Images are resized to 224 by 224 and run through the MobileNetV2 preprocessing in both
-training and prediction, which matters more than it looks.
+training and prediction. The two have to match, or the predictions are meaningless.
 
 ## Running it
 
-Python 3 and Node are both needed. Python dependencies first, since there is no
-requirements file yet:
+Python 3 and Node are both needed. Install the Python dependencies first, since there
+is no requirements file yet:
 
 ```bash
 pip install tensorflow flask flask-cors pillow numpy
@@ -68,8 +67,8 @@ npm install
 npm start
 ```
 
-That opens http://localhost:3000. Pick an image, press the button, and expect the
-first prediction to be slow while TensorFlow warms up.
+That opens http://localhost:3000. Pick an image and press the button. The first
+prediction is slow while TensorFlow warms up.
 
 ## Training it again
 
@@ -117,4 +116,4 @@ swapped for a space.
 2. Return the confidence, and say "not sure" below some threshold
 3. A `requirements.txt`
 4. Delete or rewrite the leftover Create React App test
-5. More breeds, which is now only a matter of more folders
+5. More breeds, which only requires adding more folders
